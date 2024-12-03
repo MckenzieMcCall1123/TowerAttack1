@@ -17,22 +17,27 @@ var avatar = new GameObject();
 var ground = new GameObject();
 var platform = new GameObject();
 var wall = new GameObject();
+var wallTwo = new GameObject();
 var level = new GameObject();
+
+//Character image
+var gruddenImage = document.getElementById("gruddenAxesword");
+var startButton = document.getElementById("startButtonImg")
 
 
 function init()
 {
     state = menu
 
-    avatar.color = `green`;
+    avatar.color = `pink`;
 
     level.x = 0; 
     level.y = 0;
 
-    ground.color = `brown`;
-    ground.w = c.width;
+    ground.color = `darkgreen`;
+    ground.w = 1000000;
     ground.h = c.height*.25;
-    ground.y = c.height - ground.h/2;
+    ground.y = 450;
     ground.world = level
 
     platform.w = 200;
@@ -40,11 +45,17 @@ function init()
     platform.color = `tan`
     platform.world = level
 
-    wall.h = 200;
+    wall.h = 100;
     wall.w = 34;
     wall.color = `purple`
     wall.x = 600;
     wall.world = level
+
+    wallTwo.h = 500;
+    wallTwo.w = 50;
+    wallTwo.color = `purple`
+    wallTwo.x = -100;
+    wallTwo.world = level
 
 }
 
@@ -57,7 +68,8 @@ function menu()
     {
         state = game;
     }
-    button.render()
+    button.render();
+    button.renderImage(startButton);
 }
 
 function win()
@@ -89,6 +101,7 @@ function game()
     avatar.vx *= .85;
     avatar.vy += 1;
     avatar.move();
+    
 
     //used to move the level. 
     var offset = {x:avatar.vx, y:avatar.vy}
@@ -108,6 +121,12 @@ function game()
         avatar.canJump = true;
     }
     while(wall.isOverPoint(avatar.right()) && avatar.vx >= 0)
+    {
+        avatar.vx = 0;
+        avatar.x--;
+        offset.x--;
+    }
+    while(wallTwo.isOverPoint(avatar.right()) && avatar.vx >= 0)
     {
         avatar.vx = 0;
         avatar.x--;
@@ -139,7 +158,7 @@ function game()
     platform.render();
     wall.render();
     avatar.render();
-    
+    avatar.renderImage(gruddenImage);
 }
 
 
