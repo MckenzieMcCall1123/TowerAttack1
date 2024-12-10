@@ -139,16 +139,13 @@ function lose()
         state = menu;
     }
 
-    loseButton.x = 200;
-    loseButton.y = 200;
+    loseButton.x = 300;
+    loseButton.y = 300;
     loseButton.renderLoseButton();
 
-    // Display lose message (optional)
     ctx.fillStyle = "red";
     ctx.font = "30px Arial";
     ctx.fillText("You Lose! Click the button to restart.", 150, 150);
-
-
 }
 
 
