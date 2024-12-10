@@ -38,6 +38,18 @@ class GameObject
         this.img.sh=this.img.src.height 
     }
 
+    
+
+    render(context) {
+        context.fillStyle = this.color;
+        context.fillRect(this.x, this.y, 10, 10);
+    }
+
+    update() {
+        this.x += this.vx;
+    }
+
+
     renderImage(image)
     {
         ctx.save();
@@ -100,7 +112,7 @@ class GameObject
             ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h)
         ctx.restore();
     }
-    
+
     renderLoseButton()
     {
         ctx.save();
@@ -167,4 +179,6 @@ class GameObject
         }
         return false; 
     }
+
+    
 }
