@@ -21,48 +21,28 @@ var wall = new GameObject();
 var wallTwo = new GameObject();
 var level = new GameObject();
 var tower = new GameObject();
+var axe = new GameObject();
 var numberOfEnemies = 20;
 var activeEnemies = [];
 var activatedEnemies = 0;
 var enemies = [];
+var axePool = [];
+var maxAmmo = 100;
+var axes = 0;
+var throwAxe = false;
+var canShoot = true;
 
 //Character image
 var gruddenImage = document.getElementById("gruddenAxesword");
+//Other Images
 var startButton = document.getElementById("startButtonImg")
 var towerImage1 = document.getElementById("towerImg");
 var enemyImage = document.getElementById("batImg");
-
-
-var numberOfAxe = 1000;
-var axeThrow = [];
-var currentAxeIndex = 0;
-
-// Pre-create axe objects
-for (var i = 0; i < numberOfAxe; i++) {
-    axeThrow[i] = new GameObject();
-}
-    
-    document.addEventListener('click', () => {
-        // Get the next axe from the pool
-        const axe = axeThrow[currentAxeIndex];
-        axe.x = avatar.x;
-        axe.y = avatar.y;
-        axe.vx = 10; // Example velocity
-        currentAxeIndex = (currentAxeIndex + 1) % numberOfAxe; // Cycle through the pool
-    });
-
-//Making the weapon work
-/*var axeThrow = []
-var numberOfAxe = 0
-for(var i=0; i<numberOfAxe; i++){
-    axeThrow[i] = new GameObject();
-
-}
-*/
-
+var axeImage = document.getElementById("axeImg");
 
 function init()
 {
+    
     state = menu
 
     avatar.color = `pink`;
@@ -153,7 +133,7 @@ function resetGame(){
     // Reset avatar position and velocity
     avatar.x = 100;
     avatar.y = 100;
-    avatar.vx *= .75;
+    avatar.vx *= .85;
     avatar.vy += .80;
 
     // Reset level position
@@ -166,7 +146,7 @@ function resetGame(){
     for (let i = 0; i < enemies.length; i++) {
         enemies[i].x = tower.x;
         enemies[i].y = tower.y;
-        enemies[i].vx = -5; // Reset enemy speed if applicable
+        enemies[i].vx = -5;
     }
 }
 
@@ -185,6 +165,20 @@ function game()
     if(d == true)
     {
         avatar.vx += 1;
+    }
+
+    if(right == true && canShoot){
+        canShoot = false;
+        axes++;
+        var ax = new GameObject();
+        ax.vx = 10;
+        ax.setImage("#axeImg");
+        ax.x = avatar.x;
+        ax.y = avatar.y;
+        axePool.push(ax); 
+        console.log(axePool);
+        setTimeout(cooldown, 500);
+
     }
 
     avatar.vx *= .75;
@@ -250,23 +244,25 @@ function game()
     //----------------------------*/
     
 
-    //Weapon
-    /*var numberOfAxe = 1000
-    var axeThrow = [];
-
-    for(var i=0; i<numberOfAxe; i++){
-        axeThrow[i] = new GameObject();
-        axeThrow[i].x = avatar.x;
-        axeThrow[i].y = avatar.y;
-        axeThrow[i].color = `red`;
-        axeThrow[i].vx = 10;
+    //Weapon code
+    for(var i = 0; i < axePool.length; i++){
+        axePool[i].move();
+        axePool[i].renderImage(axeImage);;
+        for(var j = 0; j< enemies.length;j++){
+            if(axePool[i].overlaps(enemies[j])){
+                enemies[j].x = 1000000;
+            }
+        }
+            
     }
 
-    if(clicked){
-        axeThrow();
-    }
-*/
+   
 
+
+    
+
+    
+    
     ground.render();
     platform.render();
     wall.render();
@@ -313,6 +309,10 @@ function spawnEnemy(){
 
     
    
+}
+
+function cooldown(){
+    canShoot = true;
 }
 
 
