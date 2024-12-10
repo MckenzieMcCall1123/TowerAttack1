@@ -94,7 +94,17 @@ class GameObject
     renderButton()
     {
         ctx.save();
-            ctx.fillStyle = "white"
+            ctx.fillStyle = "red"
+            ctx.translate(this.x+this.world.x, this.y+this.world.y)
+            ctx.rotate(this.angle*Math.PI/180)
+            ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h)
+        ctx.restore();
+    }
+    
+    renderLoseButton()
+    {
+        ctx.save();
+            ctx.fillStyle = "red"
             ctx.translate(this.x+this.world.x, this.y+this.world.y)
             ctx.rotate(this.angle*Math.PI/180)
             ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h)

@@ -13,6 +13,7 @@ function main()
 //setup
 var state;
 var button = new GameObject();
+var loseButton = new GameObject();
 var avatar = new GameObject();
 var ground = new GameObject();
 var platform = new GameObject();
@@ -23,18 +24,14 @@ var tower = new GameObject();
 var numberOfEnemies = 20;
 var activeEnemies = [];
 var activatedEnemies = 0;
+var enemies = [];
 
 //Character image
 var gruddenImage = document.getElementById("gruddenAxesword");
 var startButton = document.getElementById("startButtonImg")
+var towerImage1 = document.getElementById("towerImg");
 
-//Weapon
-var axe = new GameObject();
-axe.x = avatar.x
-axe.y = avatar.y - 50
-axe.w = 50
-axe.h = 50
-axe.vx = 1
+
 
 //Making the weapon work
 /*var axeThrow = []
@@ -44,14 +41,6 @@ for(var i=0; i<numberOfAxe; i++){
 
 }
 */
-
-//Enemies
-
-var enemies = [];
-
-
-
-
 
 
 function init()
@@ -88,18 +77,13 @@ function init()
     wallTwo.x = -100;
     wallTwo.world = level
 
-    tower.h = 400;
+    tower.h = 200;
     tower.w = 120;
     tower.x = 2000;
-    tower.y = 300;
+    tower.y = 250;
     tower.color = `red`;
     tower.world = level
-
-
 }
-
-
-
 init();
 
 for(var i = 0; i<numberOfEnemies;i++){
@@ -107,7 +91,7 @@ for(var i = 0; i<numberOfEnemies;i++){
     enemies[i].x = tower.x;
     enemies[i].y = tower.y;
     enemies[i].color = "purple";
-    enemies[i].vx = -10;
+    enemies[i].vx = -5;
 }
 
 /*---------------Game Screens (states)----------------*/
@@ -116,9 +100,13 @@ function menu()
     if(clicked(button))
     {
         spawnEnemy();
+        //avatar.x--;
+        //avatar.y--;
+        //enemies[i].x = tower.x;
+        //enemies[i].y = tower.y;
         state = game;
     }
-    button.renderButton();
+
     button.renderImage(startButton);
 }
 
@@ -128,6 +116,15 @@ function win()
 }
 function lose()
 {
+    if(clicked(loseButton)){
+        state = menu;
+        resetGame();
+    }
+
+    loseButton.x = 200
+    loseButton.y = 200
+    loseButton.renderLoseButton();
+
 
 }
 
@@ -152,10 +149,17 @@ function game()
     avatar.vy += 1;
     avatar.move();
     
+    function resetGame(){
+        avatar.x--;
+        avatar.y--;
+        activeEnemies.x = tower.x;
+        activeEnemies.y = tower.y;
+    }
 
     //used to move the level. 
     var offset = {x:avatar.vx, y:avatar.vy}
 
+    
     while(ground.isOverPoint(avatar.bottom()))
     {
         avatar.vy = 0;
@@ -203,6 +207,28 @@ function game()
         avatar.y += dy*.15; 
     //----------------------------*/
     
+    //Weapon
+    /*var numberOfAxe = 1000
+    var axeThrow = [];
+
+    for(var i=0; i<numberOfAxe; i++){
+        axeThrow[i] = new GameObject();
+        axeThrow[i].x = avatar.x;
+        axeThrow[i].y = avatar.y;
+        axeThrow[i].color = `red`;
+        axeThrow[i].vx = 10;
+
+        axeThrow.render();
+        axeThrow.move();
+    }
+
+
+
+    if(clicked){
+        axeThrow();
+    }
+*/
+
 
     ground.render();
     platform.render();
@@ -211,6 +237,10 @@ function game()
     avatar.renderImage(gruddenImage);
     wallTwo.render();
     tower.render();
+    //tower.renderImage(towerImage1);
+    
+
+
     for (var i = 0; i < activeEnemies.length; i++) {
 
 
@@ -228,6 +258,10 @@ function game()
         activeEnemies[i].move();
         activeEnemies[i].render();
 
+        if(activeEnemies[i].isOverPoint(avatar)){
+            state = lose
+        }
+
     }
 }
 
@@ -239,6 +273,8 @@ function spawnEnemy(){
         activatedEnemies++
         setTimeout(spawnEnemy, 3000);
     }
+
+    
     
 }
 
